@@ -9,6 +9,9 @@
 (defn- set-categories [app categories]
   (assoc-in app [:categories] categories))
 
+(defn- product-to-cart [app product]
+  (update app :cart conj product))
+
 (defn- load-products-by-category! [{:keys [categories] :as app} server-get-fn! category-id]
   (let [category (some #(when (= (:id %) category-id) %) categories)]
     (server-get-fn! category)
@@ -26,3 +29,6 @@
 
 (defn load-product-categories! []
   (server/get! "/categories" {:on-success #(state/update-state! set-categories %)}))
+
+(defn add-to-cart! [product]
+  (state/update-state! product-to-cart product))
