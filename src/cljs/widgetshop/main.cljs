@@ -6,7 +6,8 @@
             [cljs-react-material-ui.reagent :as ui]
             [cljs-react-material-ui.icons :as ic]
             [widgetshop.app.state :as state]
-            [widgetshop.app.products :as products]))
+            [widgetshop.app.products :as products]
+            [widgetshop.view.products-list :as products-list]))
 
 
 
@@ -41,26 +42,7 @@
 
      ;; Product listing for the selected category
      (let [products ((:products-by-category app) (:category app))]
-       (if (= :loading products)
-         [ui/refresh-indicator {:status "loading" :size 40 :left 10 :top 10}]
-
-         [ui/table
-          [ui/table-header {:display-select-all false :adjust-for-checkbox false}
-           [ui/table-row
-            [ui/table-header-column "Name"]
-            [ui/table-header-column "Description"]
-            [ui/table-header-column "Price (€)"]
-            [ui/table-header-column "Add to cart"]]]
-          [ui/table-body {:display-row-checkbox false}
-           (for [{:keys [id name description price]} ((:products-by-category app) (:category app))]
-             ^{:key id}
-             [ui/table-row
-              [ui/table-row-column name]
-              [ui/table-row-column description]
-              [ui/table-row-column price]
-              [ui/table-row-column
-               [ui/flat-button {:primary true :on-click #(js/alert "add to cart!")}
-                "Add to cart"]]])]]))
+       (products-list/listing products))
 
      [ui/raised-button {:label        "Click me"
                         :icon         (ic/social-group)
