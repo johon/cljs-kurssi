@@ -11,12 +11,6 @@
 
 
 
-;; Task 1: refactor this, the listing of products in a category should
-;; be its own component (perhaps in another namespace).
-;;
-;; Task 2: Add actions to add item to cart. See that cart badge is automatically updated.
-;;
-
 (defn widgetshop [app]
   [ui/mui-theme-provider
    {:mui-theme (get-mui-theme
@@ -46,7 +40,8 @@
 
      [ui/raised-button {:label        "Click me"
                         :icon         (ic/social-group)
-                        :on-click     #(println "clicked")}]]]])
+                        :on-click     #(println "clicked")}]]
+    [products-list/product-view (:selected-product app)]]])
 
 
 (defn main-component []
