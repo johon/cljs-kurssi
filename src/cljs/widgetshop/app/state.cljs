@@ -9,6 +9,9 @@
                       ;; Loaded product listings keyd by selected category
                       :products-by-category {}
 
+                      ;; Ratings
+                      :ratings-by-product {}
+
                       ;; Product selected for viewing
                       :selected-product nil}))
 

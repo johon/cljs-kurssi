@@ -12,6 +12,9 @@
 (defn- product-to-cart [app product]
   (update app :cart conj product))
 
+(defn- set-rating [app product-id rating]
+  (assoc-in app [:ratings-by-product product-id] rating))
+
 (defn- load-products-by-category! [{:keys [categories] :as app} server-get-fn! category-id]
   (let [category (some #(when (= (:id %) category-id) %) categories)]
     (server-get-fn! category)
@@ -32,3 +35,17 @@
 
 (defn add-to-cart! [product]
   (state/update-state! product-to-cart product))
+
+(defn- select-product [app product]
+  (assoc app :selected-product product))
+
+(defn select-product! [products row-index]
+  (if-let [row-index (first (js->clj row-index))]
+    (do (println (str "Selected row " row-index))
+        (state/update-state! select-product (get products row-index)))))
+
+(defn post-a-new-rating! [{id :id :as product} rating]
+  (server/post! "/ratings/" {:params {:id id :my-review {:rating rating}}
+                             :on-success #(do
+                                           (select-category-by-id! (-> @state/app :category :id))
+                                           (state/update-state! select-product nil))}))
